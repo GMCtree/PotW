@@ -1,5 +1,6 @@
 #include <iostream>
 #include <vector>
+#include <bitset>
 
 using namespace std;
 
@@ -34,32 +35,27 @@ void fill_vector(int size, vector< pair <string, unsigned long int>>& users) {
 
 void find_match(vector< pair <string, unsigned long int>> users, pair<string, string>& best_match, pair<string, string>& worst_match) {
 
-	unsigned long int best = 4294967295, worst = 0, second_worst = 0; //highest unsigned long value, lowest unsigned long value
+	bitset<32> best = 4294967295, worst = 0, check; //highest unsigned long value, lowest unsigned long value
 
 	for (auto x : users) {
 		for (auto y : users) {
 			if (x.first == y.first) //check if comparing a user to itself
 				continue;
 
-			auto check = x.second ^ y.second;
+			check = x.second ^ y.second;
 
-			if (check < best) { //check if two users are the best match
+			//cout << best.to_string() << endl << "SIZE: " << best.size() << endl;
+
+			if (check.count() < best.count()) { //check if two users are the best match
 				best_match.first = x.first;
 				best_match.second = y.first;
 				best = check;
 			}
 
-			if (check > worst) //set the value for worst match
-				worst = check;
-
-			/* since we must consider that opposites attract, using the absolute worst match would mean that the current
-			   couple is actually a plausible good match. So by taking the second worst match, we have the true worst couple
-			   because the 'opposites attract' rule does is not as strong as it is for the absolute worst couple
-			*/
-			if ((check < worst) && (check > second_worst)) { //check if two users are the worst match
+			if (check.count() > worst.count()) { //check if two users are the worst match
 				worst_match.first = x.first;
 				worst_match.second = y.first;
-				check = second_worst;
+				check = worst;
 			}
 		}
 	}
