@@ -55,7 +55,7 @@ void find_match(vector< pair <string, unsigned long int>> users, pair<string, st
 			if (check.count() > worst.count()) { //check if two users are the worst match
 				worst_match.first = x.first;
 				worst_match.second = y.first;
-				check = worst;
+				worst = check;
 			}
 		}
 	}
